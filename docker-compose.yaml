@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: stakewolle
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 5432
+    volumes:
+      - ./app_pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:6.2-alpine
+    hostname: redis
+    container_name: redis
+    command:
+      - 'redis-server'
+      - '--requirepass 6379'
+    ports:
+      - 6379:6379
+
+volumes:
+  app_pg_data:
+    driver: "local"

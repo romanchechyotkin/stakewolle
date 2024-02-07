@@ -1,0 +1,6 @@
+# python
+__pycache__/
+venv/
+
+# database data
+app_pg_data/

@@ -1,13 +1,10 @@
 import sys
-import uuid
-from datetime import datetime, timedelta
 from typing import Any
 
-from pydantic import UUID4
 from sqlalchemy import insert, select
 
 from src.auth.schemas import AuthUser
-from src.auth.security import check_password, hash_password
+from src.auth.security import hash_password
 from src.database import fetch_one, users
 
 sys.path.append("..")

@@ -11,5 +11,8 @@ class Config(BaseSettings):
     POSTGRESQL_URL: PostgresDsn = "postgres://user:5432@localhost:5432/db"
     REDIS_URL: RedisDsn
 
+    JWT_ALG: str = ""
+    JWT_SECRET: str = ""
+
 
 settings = Config()

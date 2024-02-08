@@ -4,6 +4,7 @@ from src.exceptions import (BadRequest, NotAuthenticated, NotFound,
 
 class ErrorCode:
     AUTHENTICATION_REQUIRED = "Authentication required."
+    AUTHORIZATION_FAILED = "Authentication failed."
     INVALID_TOKEN = "Invalid token."
     INVALID_CREDENTIALS = "Invalid credentials."
     EMAIL_TAKEN = "Email is already taken."

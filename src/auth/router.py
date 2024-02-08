@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 
-from src.auth.exceptions import EmailNotFound, WrongPassword
+from src.auth.exceptions import EmailNotFound, WrongPassword, EmailTaken
 from src.auth.jwt import create_access_token, create_refresh_token
 from src.auth.schemas import AuthUser, LoginResponse, RegistrationResponse
 from src.auth.security import check_password
@@ -13,6 +13,10 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 @router.post("/registration", status_code=status.HTTP_201_CREATED, response_model=RegistrationResponse)
 async def registration(user: AuthUser):
     print(user.email, user.password)
+
+    user_data = await get_user_by_email(user.email)
+    if user_data:
+        raise EmailTaken()
 
     try:
         auth_data = await create_user(user)

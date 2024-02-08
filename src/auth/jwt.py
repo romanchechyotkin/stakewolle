@@ -14,7 +14,6 @@ def create_access_token(user: dict, expires_delta: timedelta | None = None):
 
     jwt_data = {
         "sub": str(user["id"]),
-        "user_id": str(user["id"]),
         "email": str(user["email"]),
         "exp": expire,
     }
@@ -33,7 +32,6 @@ def create_refresh_token(user: dict, expires_delta: timedelta | None = None):
 
     jwt_data = {
         "sub": str(user["id"]),
-        "user_id": str(user["id"]),
         "exp": expire,
     }
 

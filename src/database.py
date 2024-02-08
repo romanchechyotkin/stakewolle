@@ -23,8 +23,9 @@ users = Table(
     "users",
     metadata,
     Column("id", Integer, Identity(), primary_key=True),
-    Column("email", String, nullable=False),
+    Column("email", String, nullable=False, unique=True),
     Column("password", LargeBinary, nullable=False),
+    Column("referral", String, unique=True),
     Column("created_at", DateTime, server_default=func.now(), nullable=False),
     Column("updated_at", DateTime, onupdate=func.now()),
 )

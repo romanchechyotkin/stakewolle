@@ -8,6 +8,8 @@ class ErrorCode:
     INVALID_TOKEN = "Invalid token."
     INVALID_CREDENTIALS = "Invalid credentials."
     EMAIL_TAKEN = "Email is already taken."
+    EMAIL_NOT_FOUND = "Email not found."
+    WRONG_PASSWORD = "Incorrect password"
     REFRESH_TOKEN_NOT_VALID = "Refresh token is not valid."
     REFRESH_TOKEN_REQUIRED = "Refresh token is required either in the body or cookie."
 
@@ -30,6 +32,14 @@ class InvalidCredentials(NotAuthenticated):
 
 class EmailTaken(BadRequest):
     DETAIL = ErrorCode.EMAIL_TAKEN
+
+
+class EmailNotFound(BadRequest):
+    DETAIL = ErrorCode.EMAIL_NOT_FOUND
+
+
+class WrongPassword(BadRequest):
+    DETAIL = ErrorCode.WRONG_PASSWORD
 
 
 class RefreshTokenNotValid(NotAuthenticated):

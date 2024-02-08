@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 
-from src.auth.exceptions import InvalidCredentials
+from src.auth.exceptions import EmailNotFound, WrongPassword
 from src.auth.jwt import create_access_token, create_refresh_token
 from src.auth.schemas import AuthUser, LoginResponse, RegistrationResponse
 from src.auth.security import check_password
@@ -40,13 +40,12 @@ async def registration(user: AuthUser):
 async def login(user: AuthUser):
     print(user.email, user.password)
 
-# todo  norm validation 
     try:
         user_data = await get_user_by_email(str(user.email))
         if not user_data:
-            raise InvalidCredentials()
+            raise EmailNotFound()
         if not check_password(user.password, user_data["password"]):
-            raise InvalidCredentials()
+            raise WrongPassword()
         
     except SQLAlchemyError as e:
         print(f"SQLAlchemyError: {e}")

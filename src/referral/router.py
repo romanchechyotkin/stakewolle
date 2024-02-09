@@ -1,14 +1,13 @@
 from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Depends, status
-from sqlalchemy.exc import SQLAlchemyError
 
 from src.auth.jwt import parse_jwt_user_data
 from src.auth.schemas import TokenData
 from src.referral.schemas import (CreateReferralRequest,
                                   CreateReferralResponse, GetReferralRequest,
                                   GetReferralResponse)
-from src.referral.service import create_referral_code
+from src.referral.service import create_referral_code, get_referral_code_by_email
 from src.referral.utils import generate_referral_code
 
 router = APIRouter(prefix="/referrals", tags=["Referral"])
@@ -32,7 +31,10 @@ async def create(
 
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=GetReferralResponse)
-async def login(data: GetReferralRequest):
+async def get(data: GetReferralRequest):
     print(data.email)
 
-    return GetReferralResponse(code="")
+    referral_code_data = await get_referral_code_by_email(data.email)
+    print(referral_code_data)
+
+    return GetReferralResponse(code=referral_code_data["referral"])

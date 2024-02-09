@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 
-from src.auth.exceptions import EmailNotFound, WrongPassword, EmailTaken
+from src.auth.exceptions import EmailNotFound, EmailTaken, WrongPassword
 from src.auth.jwt import create_access_token, create_refresh_token
 from src.auth.schemas import AuthUser, LoginResponse, RegistrationResponse
 from src.auth.security import check_password
@@ -26,7 +26,6 @@ async def registration(user: AuthUser):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=error_msg)
 
     print(auth_data)
-    
 
     return RegistrationResponse(email=auth_data["email"])
 

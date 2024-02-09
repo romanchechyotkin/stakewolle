@@ -1,4 +1,4 @@
-from src.exceptions import (BadRequest, NotAuthenticated, NotFound,
+from src.exceptions import (BadRequest, InternalServerError, NotAuthenticated,
                             PermissionDenied)
 
 
@@ -12,6 +12,7 @@ class ErrorCode:
     WRONG_PASSWORD = "Incorrect password"
     REFRESH_TOKEN_NOT_VALID = "Refresh token is not valid."
     REFRESH_TOKEN_REQUIRED = "Refresh token is required either in the body or cookie."
+    INTERNAL_SERVER_ERROR = "Internal error"
 
 
 class AuthRequired(NotAuthenticated):
@@ -44,3 +45,6 @@ class WrongPassword(BadRequest):
 
 class RefreshTokenNotValid(NotAuthenticated):
     DETAIL = ErrorCode.REFRESH_TOKEN_NOT_VALID
+
+class InternalServerError(InternalServerError):
+    DETAIL = ErrorCode.INTERNAL_SERVER_ERROR

@@ -11,3 +11,7 @@ class RegistrationResponse(BaseModel):
 class LoginResponse(BaseModel):
     access_token: str
     refresh_token: str
+
+class TokenData(BaseModel):
+    user_id: str | None = None
+    email: str | None = None

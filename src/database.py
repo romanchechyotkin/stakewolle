@@ -1,10 +1,11 @@
 from typing import Any
 
-from sqlalchemy import (Boolean, Column, CursorResult, DateTime, ForeignKey,
+from sqlalchemy import (Column, CursorResult, DateTime, ForeignKey,
                         Identity, Insert, Integer, LargeBinary, MetaData,
                         Select, String, Table, Update, func)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
 
 from src.config import settings
 
@@ -16,8 +17,11 @@ DB_NAMING_CONVENTION = {
     "pk": "%(table_name)s_pkey",
 }
 
+
 engine = create_async_engine(str(settings.POSTGRESQL_URL))
 metadata = MetaData(naming_convention=DB_NAMING_CONVENTION)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 users = Table(
     "users",
@@ -25,22 +29,17 @@ users = Table(
     Column("id", Integer, Identity(), primary_key=True),
     Column("email", String, nullable=False, unique=True),
     Column("password", LargeBinary, nullable=False),
-    Column("referral", String, unique=True),
+    Column("referral", String(12), ForeignKey("referral_codes.code")),
     Column("created_at", DateTime, server_default=func.now(), nullable=False),
     Column("updated_at", DateTime, onupdate=func.now()),
 )
 
-# refresh_tokens = Table(
-#     "auth_refresh_token",
-#     metadata,
-#     Column("uuid", UUID, primary_key=True),
-#     Column("user_id", ForeignKey("auth_user.id", ondelete="CASCADE"), nullable=False),
-#     Column("refresh_token", String, nullable=False),
-#     Column("expires_at", DateTime, nullable=False),
-#     Column("created_at", DateTime, server_default=func.now(), nullable=False),
-#     Column("updated_at", DateTime, onupdate=func.now()),
-# )
-
+referral_codes = Table(
+    "referral_codes",
+    metadata,
+    Column("code", String(12), primary_key=True),
+    Column("expiration", DateTime, nullable=False),
+)
 
 async def fetch_one(select_query: Select | Insert | Update) -> dict[str, Any] | None:
     async with engine.begin() as conn:

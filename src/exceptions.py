@@ -24,6 +24,10 @@ class BadRequest(DetailedHTTPException):
     STATUS_CODE = status.HTTP_400_BAD_REQUEST
     DETAIL = "Bad Request"
 
+class InternalServerError(DetailedHTTPException):
+    STATUS_CODE = status.HTTP_500_INTERNAL_SERVER_ERROR
+    DETAIL = "internal error"
+
 
 class NotAuthenticated(DetailedHTTPException):
     STATUS_CODE = status.HTTP_401_UNAUTHORIZED

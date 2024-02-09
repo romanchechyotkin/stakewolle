@@ -3,6 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from src.auth.router import router as auth_router
 from src.config import settings
+from src.referral.router import router as referral_router
 
 app = FastAPI()
 
@@ -15,3 +16,4 @@ app.add_middleware(
 )
 
 app.include_router(router=auth_router)
+app.include_router(router=referral_router)

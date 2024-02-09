@@ -2,10 +2,10 @@ import sys
 from datetime import timedelta
 from typing import Any
 
-from sqlalchemy import insert, update, select
+from sqlalchemy import insert, update, select, delete
 
 from src.auth.exceptions import InternalServerError
-from src.database import SessionLocal, fetch_one, referral_codes, users, referral_codes
+from src.database import SessionLocal, fetch_one, execute, referral_codes, users, referral_codes
 from src.referral.schemas import ReferralCode
 
 sys.path.append("..")
@@ -53,3 +53,30 @@ async def get_referral_code_by_email(email: str) -> dict[str, Any] | None:
     select_query = select(users).where(users.c.email == email)
     
     return await fetch_one(select_query)
+
+async def delete_referral_code(user_id: str):
+    user_query = select(users).where(users.c.id == int(user_id))
+    print(user_query)
+    
+    user_result = await fetch_one(user_query)
+    print(user_result)
+
+    if user_result["referral"]:
+        update_query = (
+            update(users)
+            .where(users.c.id == int(user_id))
+            .values(referral=None)
+            .returning(users)
+        )
+
+        await execute(update_query)
+        
+        delete_query = (
+            delete(referral_codes)
+            .where(referral_codes.c.code == user_result["referral"])
+        )
+        print(delete_query)
+
+        await execute(delete_query) 
+
+        

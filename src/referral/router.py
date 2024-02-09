@@ -7,7 +7,7 @@ from src.auth.schemas import TokenData
 from src.referral.schemas import (CreateReferralRequest,
                                   CreateReferralResponse, GetReferralRequest,
                                   GetReferralResponse)
-from src.referral.service import create_referral_code, get_referral_code_by_email
+from src.referral.service import create_referral_code, get_referral_code_by_email, delete_referral_code
 from src.referral.utils import generate_referral_code
 
 router = APIRouter(prefix="/referrals", tags=["Referral"])
@@ -38,3 +38,13 @@ async def get(data: GetReferralRequest):
     print(referral_code_data)
 
     return GetReferralResponse(code=referral_code_data["referral"])
+
+@router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete(
+    jwt_data: TokenData = Depends(parse_jwt_user_data),
+):
+    print(jwt_data)
+
+    await delete_referral_code(jwt_data.user_id)
+
+    return

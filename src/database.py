@@ -2,7 +2,7 @@ from typing import Any
 
 from sqlalchemy import (Column, CursorResult, DateTime, ForeignKey,
                         Identity, Insert, Integer, LargeBinary, MetaData,
-                        Select, String, Table, Update, func)
+                        Select, Delete, String, Table, Update, func)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -53,6 +53,6 @@ async def fetch_all(select_query: Select | Insert | Update) -> list[dict[str, An
         return [r._asdict() for r in cursor.all()]
 
 
-async def execute(select_query: Insert | Update) -> None:
+async def execute(select_query: Insert | Update | Delete) -> None:
     async with engine.begin() as conn:
         await conn.execute(select_query)

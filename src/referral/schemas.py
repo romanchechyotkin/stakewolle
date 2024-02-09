@@ -15,6 +15,9 @@ class GetReferralRequest(BaseModel):
 class GetReferralResponse(BaseModel):
     code: str
 
+class GetShareURL(BaseModel):
+    url: str
+
 class ReferralCode(BaseModel):
     code: str
     expiration: timedelta

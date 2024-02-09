@@ -50,7 +50,7 @@ async def create_referral_code(user_id: str, code: str, expiration: timedelta) -
     return created_referral_code
 
 async def get_referral_code_by_email(email: str) -> dict[str, Any] | None:
-    select_query = select(users).where(users.c.email == email)
+    select_query = select(users.c.referral).where(users.c.email == email)
     
     return await fetch_one(select_query)
 

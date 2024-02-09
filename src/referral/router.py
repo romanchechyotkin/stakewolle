@@ -4,11 +4,12 @@ from fastapi import APIRouter, Depends, status
 
 from src.auth.jwt import parse_jwt_user_data
 from src.auth.schemas import TokenData
-from src.referral.schemas import (CreateReferralRequest,
+from src.referral.schemas import (CreateReferralRequest, GetShareURL,
                                   CreateReferralResponse, GetReferralRequest,
                                   GetReferralResponse)
 from src.referral.service import create_referral_code, get_referral_code_by_email, delete_referral_code
 from src.referral.utils import generate_referral_code
+from src.exceptions import NotFound
 
 router = APIRouter(prefix="/referrals", tags=["Referral"])
 
@@ -38,6 +39,23 @@ async def get(data: GetReferralRequest):
     print(referral_code_data)
 
     return GetReferralResponse(code=referral_code_data["referral"])
+
+@router.get("/share", status_code=status.HTTP_200_OK, response_model=GetShareURL)
+async def get(
+    jwt_data: TokenData = Depends(parse_jwt_user_data),
+):
+    print(jwt_data)
+
+    referral_code_data = await get_referral_code_by_email(jwt_data.email)
+    print(referral_code_data)
+
+    if not referral_code_data["referral"]:
+        raise NotFound()
+    
+    ref_code = referral_code_data["referral"]
+    url = f"http://127.0.0.1:8000/auth/registration?ref={ref_code}"
+
+    return GetShareURL(url=url)
 
 @router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(

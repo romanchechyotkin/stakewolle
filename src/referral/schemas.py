@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr
 
 
 class CreateReferralRequest(BaseModel):
